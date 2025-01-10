@@ -1,7 +1,7 @@
 #include "alert.h"
 #include <Arduino.h>
 
-const int buzPin = 11;
+const int buzPin = 15;
 enum class tones {
   NOTE_C4 = 262,
   NOTE_D4 = 294,

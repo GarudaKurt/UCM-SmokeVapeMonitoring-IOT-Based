@@ -13,7 +13,7 @@ float lpg, co, smoke, calibrate;
 
 MQ135 mq135_sensor(PIN_MQ135);
 
-int temperature, humidity = 0; 
+int temperature, humidity = 25; 
 
 MQ2 mq2(pin);
 
@@ -48,10 +48,10 @@ void loop(){
     Serial.println("Error reading DH11 temp and humd")
 
   // Check if any reads failed and exit early (to try again).
-  if (isnan(humidity) || isnan(temperature)) {
-    Serial.println(F("Failed to read from DHT sensor!"));
-    return;
-  }
+    if (isnan(humidity) || isnan(temperature)) {
+      Serial.println(F("Failed to read from DHT sensor!"));
+      return;
+    }
 
   float rzero = mq135_sensor.getRZero();
   float correctedRZero = mq135_sensor.getCorrectedRZero(temperature, humidity);

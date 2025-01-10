@@ -1,5 +1,5 @@
 #include "configFirebase.h"
-#include "Display.h"
+#include "Sensors.h"
 #include <Arduino.h>
 
 #ifdef ESP32
@@ -30,7 +30,6 @@ void initFirebase() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
     Serial.println("Not connected to WiFi, please check!");
-    wifiDisplayError();
     delay(300);
   }
 
@@ -46,21 +45,16 @@ void initFirebase() {
   Firebase.setDoubleDigits(5);
 }
 
-int readMQ2Sensor() {
+void readSensor() {
   if (Firebase.ready()) {
-    if (Firebase.getString(fbdo, "/monitoring/mq2")) {
-      return fbdo.stringData().toInt();
-    }
-    return -1;
-  }
-}
-
-int readMQ135Sensor() {
-  if (Firebase.ready()) {
-    if (Firebase.getString(fbdo, "/monitoring/mq135")) {
-      return fbdo.stringData().toInt();
-    }
-    return -1;
+    bool success = Firebase.setFloat(fbdo, "/monitoring/mq2", readMQ2Value());
+    bool compile = Firebase.setFloat(fbdo, "/monitoring/mq135", readMQ135Value());
+    Serial.print("MQ2 Val: ");
+    Serial.println(readMQ2Value());
+    Serial.print("MQ135 Val: ");
+    Serial.println(readMQ135Value());
+    if(!success || !compile)
+      Serial.println("Failed to send to firebase");
   }
 }
 

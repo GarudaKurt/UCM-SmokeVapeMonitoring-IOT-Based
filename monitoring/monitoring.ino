@@ -5,8 +5,8 @@
 #include "configFirebase.h"
 #include "Display.h"
 
-const int minThreshold = 300;
-const int maxThreshold = 400;
+const int minThreshold = 100;
+const int maxThreshold = 500;
 const int buzzerPin = 11;
 
 int mq2Val = 0;
