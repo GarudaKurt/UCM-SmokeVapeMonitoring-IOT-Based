@@ -5,12 +5,12 @@
 #include "configFirebase.h"
 #include "Display.h"
 
-const int minThreshold = 100;
-const int maxThreshold = 500;
+const float minThreshold = 100.00; //change the value base on the average baseline results of calibratingMQ2() sensors
+const float maxThreshold = 500.00; //change the value base on the average baseline results of calibratingMQ135() sensors
 const int buzzerPin = 11;
 
-int mq2Val = 0;
-int mq135Val = 0;
+float mq2Val = 0;
+float mq135Val = 0;
 
 unsigned long prevMillis = 0;
 unsigned long interval = 1000;
