@@ -47,8 +47,8 @@ void initFirebase() {
 
 void readSensor() {
   if (Firebase.ready()) {
-    bool success = Firebase.setFloat(fbdo, "/monitoring/mq2", readMQ2Value());
-    bool compile = Firebase.setFloat(fbdo, "/monitoring/mq135", readMQ135Value());
+    bool success = Firebase.setFloat(fbdo, "/monitoring/mq2", readMQ2Value()); //replace the readMQ2Value() into calibrateMQ2(), once you will get the baseline reading of the sensors
+    bool compile = Firebase.setFloat(fbdo, "/monitoring/mq135", readMQ135Value()); //replace the readMQ135Value() into calibrateMQ135(), once you will get the baseline reading of the sensors
     Serial.print("MQ2 Val: ");
     Serial.println(readMQ2Value());
     Serial.print("MQ135 Val: ");
