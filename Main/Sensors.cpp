@@ -33,7 +33,7 @@ float calibrateMQ2() {
 }
 
 float calibrateMQ135() {
-  return mq135_sensor.getCorrectedPPM(temperature, humidity);;
+  return mq135_sensor.getCorrectedPPM(temperature, humidity);
 }
 
 float readMQ135Value() {
