@@ -15,8 +15,8 @@
 #include <addons/TokenHelper.h>
 #include <addons/RTDBHelper.h>
 
-#define WIFI_SSID "vapemonitoring"
-#define WIFI_PASSWORD "vapemonitoring"
+#define WIFI_SSID "vapemonitoring" //change this based on your mobile hotspot name and make sure to set 2.4Ghz your mobile hotspot
+#define WIFI_PASSWORD "vapemonitoring123" //change this  based on youe hotspot password
 #define API_KEY "AIzaSyCL1xEbJjKdtq3AzhygI7OuwaXqSDFHWlU"
 #define DATABASE_URL "https://ucm-vape-monitoring-default-rtdb.firebaseio.com"
 #define USER_EMAIL "vapemonitoring@gmail.com" //create OAuth user email
@@ -44,7 +44,6 @@ void initFirebase() {
     Serial.println("Time is nullptr!");
     delay(1000);
   }
-
 
   clearDisplay();
   Serial.printf("Firebase Client v%s\n\n", FIREBASE_CLIENT_VERSION);
@@ -77,17 +76,19 @@ int readMQ135Sensor() {
   }
 }
 
-String getTime() {
+const char* getTime() {
+  static char buffer[10];
   time_t now = time(nullptr);
   struct tm* p_tm = localtime(&now);
-  String currentTime =(p_tm->tm_hour) + ":" + String(p_tm->tm_min);
-  return currentTime;
+  snprintf(buffer, sizeof(buffer), "%02d:%02d", p_tm->tm_hour, p_tm->tm_min);
+  return buffer;
 }
 
-String getDate() {
+const char* getDate() {
+  static char buffer[10];
   time_t now = time(nullptr);
   struct tm* p_tm = localtime(&now);
-  String currentDate = String(p_tm->tm_mday) + "/" + String(p_tm->tm_mon + 1);
-  return currentDate;
+  snprintf(buffer, sizeof(buffer), "%02d/%02d", p_tm->tm_mday, p_tm->tm_mon + 1);
+  return buffer;
 }
 
