@@ -4,5 +4,6 @@
 void initFirebase();
 int readMQ2Sensor();
 int readMQ135Sensor();
-
+String getTime();
+String getDate();
 #endif

@@ -13,12 +13,16 @@ int mq2Val = 0;
 int mq135Val = 0;
 
 unsigned long prevMillis = 0;
-unsigned long interval = 1000;
+const int interval = 1000;
 
+bool isAlarmActivate = false;
+const char *lastTime = "";
+const char *lastDate = "";
 void setup() {
   Serial.begin(115200);
   initLCD();
   initFirebase();
+  delay(1000);
 }
 
 void loop() {
@@ -37,12 +41,19 @@ void loop() {
       Serial.println(mq135Val);
       alarmDisplay();
       buzzerStart();
+      isAlarmActivate = true;
     } else {
-      updateDisplay(mq2Val, mq135Val);
+      updateDisplay(mq2Val, mq135Val, lastTime, lastDate);
       Serial.print("MQ2 Value: ");
       Serial.println(mq2Val);
       Serial.print("MQ135 Value: ");
       Serial.println(mq135Val);
+      if(isAlarmActivate){
+        lastTime =  getTime().c_str();
+        lastDate =  getDate().c_str()
+        updateDisplay(mq2Val, mq135Val, getTime().c_str(), getDate().c_str());
+        isAlarmActivate = false;
+     }
       buzzerStop();
     }
   }

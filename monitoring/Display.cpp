@@ -8,6 +8,8 @@ void initLCD() {
   lcd.backlight();
   lcd.setCursor(0, 0);
   lcd.print("Initializing.... ");
+  delay(1000);
+  lcd.clear();
 }
 
 void wifiDisplayError() {
@@ -15,17 +17,24 @@ void wifiDisplayError() {
   lcd.setCursor(0, 0);
   lcd.print("WiFi Failed!");
 }
-void updateDisplay(int mq2, int mq135) {
+void updateDisplay(int mq2, int mq135, const char *time, const char *date) {
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Sensor 1: ");
-  lcd.setCursor(10, 0);
+  lcd.print("S1:");
+  lcd.setCursor(4, 0);
   lcd.print(mq2);
 
-  lcd.setCursor(0, 1);
-  lcd.print("Sensor 2: ");
-  lcd.setCursor(10, 1);
+  lcd.setCursor(8, 0);
+  lcd.print("S2:");
+  lcd.setCursor(12, 0);
   lcd.print(mq135);
+
+  lcd.setCursor(0,1);
+  lcd.print("LOG:");
+  lcd.setCursor(5,1);
+  lcd.print(time);
+  lcd.setCursor(11,1)
+  lcd.print(date);
 }
 void alarmDisplay() {
   lcd.clear();
@@ -33,4 +42,18 @@ void alarmDisplay() {
   lcd.print("Smoke Detected");
   lcd.setCursor(0,1);
   lcd.print("Action required!");
+}
+
+// void displayHistory(const char * time, const char * date) {
+//   lcd.clear();
+//   lcd.setCursor(0,1);
+//   lcd.print("LOG:");
+//   lcd.setCursor(5,1);
+//   lcd.print(time);
+//   lcd.setCursor(11,1)
+//   lcd.print(date);
+// }
+
+void displayClear() {
+  lcd.clear();
 }

@@ -1,5 +1,6 @@
 #include "configFirebase.h"
 #include "Display.h"
+#include <time.h>
 #include <Arduino.h>
 
 #ifdef ESP32
@@ -25,6 +26,9 @@ FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
+int timeZone = 8 * 3600;  // Philippine Time
+int dst = 0;
+
 void initFirebase() {
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -34,6 +38,15 @@ void initFirebase() {
     delay(300);
   }
 
+  configTime(timeZone, dst, "pool.ntp.org","time.nist.gov");
+  Serial.println("Waiting for time....");
+  while(!time(nullptr)){
+    Serial.println("Time is nullptr!");
+    delay(1000);
+  }
+
+
+  clearDisplay();
   Serial.printf("Firebase Client v%s\n\n", FIREBASE_CLIENT_VERSION);
   config.api_key = API_KEY;
   auth.user.email = USER_EMAIL;
@@ -62,5 +75,19 @@ int readMQ135Sensor() {
     }
     return -1;
   }
+}
+
+String getTime() {
+  time_t now = time(nullptr);
+  struct tm* p_tm = localtime(&now);
+  String currentTime =(p_tm->tm_hour) + ":" + String(p_tm->tm_min);
+  return currentTime;
+}
+
+String getDate() {
+  time_t now = time(nullptr);
+  struct tm* p_tm = localtime(&now);
+  String currentDate = String(p_tm->tm_mday) + "/" + String(p_tm->tm_mon + 1);
+  return currentDate;
 }
 
