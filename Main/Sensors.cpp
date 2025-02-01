@@ -2,14 +2,14 @@
 #include <Arduino.h>
 #include <MQ2.h>
 #include <MQ135.h>
-#include <DHT11.h>
+//#include <DHT11.h>
 #include <Wire.h>
 
 const int PIN_MQ2 = 33;
 const int PIN_MQ135 = 32;
 const int DHT_PIN = 34;
 
-DHT11 dht11(DHT_PIN);
+//DHT11 dht11(DHT_PIN);
 
 MQ135 mq135_sensor(PIN_MQ135);
 MQ2 mq2(PIN_MQ2);
@@ -21,6 +21,7 @@ int humidity = 0;
 
 void initSensors() {
   Wire.begin(23, 22);
+  //dht.begin();
   pinMode(PIN_MQ135, INPUT);
   pinMode(PIN_MQ132, INPUT);
   analogReadResolution(12);
