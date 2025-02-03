@@ -30,7 +30,8 @@ void initSensors() {
 
 int32_t readMQ2Value() {
   smokeMQ2ppm = analogRead(PIN_MQ2);
-  return smokeMQ2ppm;
+  int32_t percentage = map(smokeMQ2ppm, 0, 4095, 0, 100);
+  return percentage;
 }
 float calibrateMQ2() {
   return mq2.readSmoke();
