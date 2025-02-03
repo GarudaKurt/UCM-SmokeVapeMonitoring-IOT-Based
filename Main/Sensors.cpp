@@ -40,6 +40,10 @@ float calibrateMQ135() {
 
 int32_t readMQ135Value() {
   smokeMQ135ppm = analogRead(PIN_MQ135);
+  if(smokeMQ135ppm > 2800)
+    smokeMQ135ppm = 100; //If smoke occur, we set the value of ppm to 100. Since, the analog value display 2500 average if no smoke detected.
+  else
+    smokeMQ135 = 0; // Otherwise, we set the ppm value to 0 as basis of no smoke detected on the area.
   return smokeMQ135ppm;
 }
 
