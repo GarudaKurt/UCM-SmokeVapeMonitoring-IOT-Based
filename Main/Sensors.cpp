@@ -5,9 +5,9 @@
 //#include <DHT11.h>
 #include <Wire.h>
 
-const int PIN_MQ2 = 33;
+const int PIN_MQ2 = 34;
 const int PIN_MQ135 = 32;
-const int DHT_PIN = 34;
+const int DHT_PIN = 35;
 
 //DHT11 dht11(DHT_PIN);
 
@@ -22,8 +22,10 @@ int humidity = 0;
 void initSensors() {
   Wire.begin(23, 22);
   //dht.begin();
+  analogSetAttenuation(ADC_11db);
   pinMode(PIN_MQ135, INPUT);
   pinMode(PIN_MQ132, INPUT);
+  
 }
 
 int32_t readMQ2Value() {
