@@ -67,7 +67,7 @@ int readMQ2Sensor() {
   }
 }
 
-int readMQ135Sensor() {
+int readSmoke() {
   if (Firebase.ready()) {
     if (Firebase.getString(fbdo, "/monitoring/mq135")) {
       return fbdo.stringData().toInt();
