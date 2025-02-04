@@ -4,7 +4,7 @@
 void initLCD();
 void wifiDisplayError();
 void alarmDisplay();
-void updateDisplay(int mq2, int mq135, const char *time, const char *date);
+void updateDisplay(int mq135, const char *time, const char *date);
 //void historyDisplay(const char * time, const char * date);
 void clearDisplay();
 
