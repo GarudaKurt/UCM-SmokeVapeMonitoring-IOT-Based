@@ -3,7 +3,7 @@
 
 void initFirebase();
 int readMQ2Sensor();
-int readMQ135Sensor();
+int readSmoke();
 String getTime();
 String getDate();
 #endif
