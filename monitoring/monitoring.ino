@@ -5,7 +5,7 @@
 #include "configFirebase.h"
 #include "Display.h"
 
-const int maxThreshold = 500;
+const int maxThreshold = 2900;
 const int buzzerPin = 11;
 
 unsigned long prevMillis = 0;
@@ -39,7 +39,7 @@ void loop() {
       buzzerStart();
       isAlarmActivate = true;
     } else {
-      updateDisplay(smokePPM, lastTime, lastDate);
+      updateDisplay(smokePPM, mq2Val, lastTime, lastDate);
       Serial.print("MQ2 Value: ");
       Serial.println(mq2Val);
       Serial.print("MQ135 Value: ");
