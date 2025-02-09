@@ -20,12 +20,14 @@ void wifiDisplayError() {
   lcd.setCursor(0, 0);
   lcd.print("WiFi Failed!");
 }
-void updateDisplay(int smoke, const char *time, const char *date) {
+void updateDisplay(int mq135ppm, int mq2ppm, const char *time, const char *date) {
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Clean Air: ");
-  lcd.print(smoke);
-  lcd.print("%");
+  lcd.print("S1:");
+  lcd.print(mq135ppm);
+  lcd.print("|");
+  lcd.print("S2:");
+  lcd.print(mq2ppm);
   lcd.setCursor(0,1);
   lcd.print("LOG:");
   lcd.setCursor(5,1);
