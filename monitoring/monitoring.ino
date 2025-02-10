@@ -43,11 +43,11 @@ void loop() {
       Serial.print("MQ2 Value: ");
       Serial.println(mq2Val);
       Serial.print("MQ135 Value: ");
-      Serial.println(mq135Val);
+      Serial.println(smokePPM);
       if(isAlarmActivate){
-        lastTime =  getTime().c_str();
-        lastDate =  getDate().c_str()
-        updateDisplay(smokePPM, getTime().c_str(), getDate().c_str());
+        lastTime =  getTime();
+        lastDate =  getDate();
+        updateDisplay(smokePPM, getTime(), getDate());
         isAlarmActivate = false;
      }
       buzzerStop();
