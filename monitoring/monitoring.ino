@@ -23,8 +23,7 @@ int calculatedThreshold = 0;  // By default we set 0 the threshold, but once we 
 int calculateAverage() {
     int sum = 0;
     for (int i = 0; i < sampleSize; i++) {
-        smokeReadings[i] = readSmoke();
-        sum += smokeReadings[i];
+        sum += readSmoke();
         delay(100);
     }
     return sum / sampleSize;
