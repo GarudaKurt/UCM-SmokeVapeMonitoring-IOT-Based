@@ -42,7 +42,3 @@ void alarmDisplay() {
   lcd.setCursor(0,1);
   lcd.print("Action required!");
 }
-
-void displayClear() {
-  lcd.clear();
-}
