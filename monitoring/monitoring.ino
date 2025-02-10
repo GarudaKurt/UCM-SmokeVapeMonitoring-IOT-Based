@@ -20,7 +20,7 @@ int smokePPM = 0;
 const int sampleSize = 20;  // We need 20 samples value to calculate avera
 int calculatedThreshold = 0;  // By default we set 0 the threshold, but once we get the average results we will just added +300 value for the smoke present.
 
-int calculateAverage() {
+int calculateAverageSmoke() {
     int sum = 0;
     for (int i = 0; i < sampleSize; i++) {
         sum += readSmoke();
