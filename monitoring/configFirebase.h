@@ -4,6 +4,6 @@
 void initFirebase();
 int readMQ2Sensor();
 int readSmoke();
-String getTime();
-String getDate();
+const char * getTime();
+const char * getDate();
 #endif
