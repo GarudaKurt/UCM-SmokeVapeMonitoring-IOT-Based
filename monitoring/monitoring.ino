@@ -17,10 +17,30 @@ const char *lastDate = "";
 int mq2Val = 0;
 int smokePPM = 0;
 
+const int sampleSize = 20;  // We need 20 samples value to calculate avera
+int calculatedThreshold = 0;  // By default we set 0 the threshold, but once we get the average results we will just added +300 value for the smoke present.
+
+int calculateAverage() {
+    int sum = 0;
+    for (int i = 0; i < sampleSize; i++) {
+        smokeReadings[i] = readSmoke();
+        sum += smokeReadings[i];
+        delay(100);
+    }
+    return sum / sampleSize;
+}
+
 void setup() {
   Serial.begin(115200);
   initLCD();
   initFirebase();
+
+  int avgSmoke = calculateAverageSmoke();
+  calculatedThreshold = avgSmoke + 300;  // for smoke present, we need to add +300 value based on the average readings.
+  Serial.print("Calculated Average Smoke: ");
+  Serial.println(avgSmoke);
+  Serial.print("Adaptive Threshold: ");
+  Serial.println(calculatedThreshold);
   delay(1000);
 }
 
@@ -28,12 +48,12 @@ void loop() {
   unsigned long currentMillis = millis();
 
   if (currentMillis - prevMillis >= interval) {
-    prevMillis = currentMillis;
 
     mq2Val = readMQ2Sensor();
     smokePPM = readSmoke();
-
-    if(smokePPM >= maxThreshold) {
+    Serial.print("Threshold: ");
+    Serial.println(calculatedThreshold);
+    if(smokePPM >= calculatedThreshold) {
       Serial.print("MQ2 Value: ");
       Serial.println(mq2Val);
       Serial.print("Smoke PPM: ");
@@ -55,5 +75,6 @@ void loop() {
      }
       buzzerStop();
     }
+    prevMillis = currentMillis;
   }
 }
