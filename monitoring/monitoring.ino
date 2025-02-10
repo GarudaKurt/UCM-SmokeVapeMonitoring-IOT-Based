@@ -14,6 +14,9 @@ const int interval = 1000;
 bool isAlarmActivate = false;
 const char *lastTime = "";
 const char *lastDate = "";
+int mq2Val = 0;
+int smokePPM = 0;
+
 void setup() {
   Serial.begin(115200);
   initLCD();
@@ -27,8 +30,8 @@ void loop() {
   if (currentMillis - prevMillis >= interval) {
     prevMillis = currentMillis;
 
-    int mq2Val = readMQ2Sensor();
-    int smokePPM = readSmoke();
+    mq2Val = readMQ2Sensor();
+    smokePPM = readSmoke();
 
     if(smokePPM >= maxThreshold) {
       Serial.print("MQ2 Value: ");
@@ -47,7 +50,7 @@ void loop() {
       if(isAlarmActivate){
         lastTime =  getTime();
         lastDate =  getDate();
-        updateDisplay(smokePPM, getTime(), getDate());
+        updateDisplay(smokePPM, mq2Val, getTime(), getDate());
         isAlarmActivate = false;
      }
       buzzerStop();
