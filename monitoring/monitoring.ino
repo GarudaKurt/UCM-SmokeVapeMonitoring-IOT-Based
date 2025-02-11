@@ -17,14 +17,17 @@ const char *lastDate = "";
 int mq2Val = 0;
 int smokePPM = 0;
 
-const int sampleSize = 20;  // We need 20 samples value to calculate avera
-int calculatedThreshold = 0;  // By default we set 0 the threshold, but once we get the average results we will just added +300 value for the smoke present.
+const int sampleSize = 20;
+int calculatedThreshold = 0;  
+int smokeSamples[sampleSize];
+int sampleIndex = 0;
+bool samplesCollected = false;
 
+//calculate the average smoke PPM from collected samples
 int calculateAverageSmoke() {
     int sum = 0;
     for (int i = 0; i < sampleSize; i++) {
-        sum += readSmoke();
-        delay(100);
+        sum += smokeSamples[i];
     }
     return sum / sampleSize;
 }
@@ -33,13 +36,6 @@ void setup() {
   Serial.begin(115200);
   initLCD();
   initFirebase();
-
-  int avgSmoke = calculateAverageSmoke();
-  calculatedThreshold = avgSmoke + 300;  // for smoke present, we need to add +300 value based on the average readings.
-  Serial.print("Calculated Average Smoke: ");
-  Serial.println(avgSmoke);
-  Serial.print("Adaptive Threshold: ");
-  Serial.println(calculatedThreshold);
   delay(1000);
 }
 
@@ -50,9 +46,30 @@ void loop() {
 
     mq2Val = readMQ2Sensor();
     smokePPM = readSmoke();
+
+    smokeSamples[sampleIndex] = smokePPM;
+    sampleIndex++;
+
+    // If we have collected 20 samples, compute the threshold
+    if (sampleIndex >= sampleSize) {
+      sampleIndex = 0;
+      samplesCollected = true;
+    }
+
+    if (samplesCollected) {
+      int avgSmoke = calculateAverageSmoke();
+      calculatedThreshold = avgSmoke + 300;  // Adaptive threshold
+      
+      Serial.print("Calculated Average Smoke: ");
+      Serial.println(avgSmoke);
+      Serial.print("Adaptive Threshold: ");
+      Serial.println(calculatedThreshold);
+    }
+
     Serial.print("Threshold: ");
     Serial.println(calculatedThreshold);
-    if(smokePPM >= calculatedThreshold) {
+
+    if(samplesCollected && calculatedThreshold != 0 && smokePPM >= calculatedThreshold) {
       Serial.print("MQ2 Value: ");
       Serial.println(mq2Val);
       Serial.print("Smoke PPM: ");
@@ -71,9 +88,10 @@ void loop() {
         lastDate =  getDate();
         updateDisplay(smokePPM, mq2Val, getTime(), getDate());
         isAlarmActivate = false;
-     }
+      }
       buzzerStop();
     }
+
     prevMillis = currentMillis;
   }
 }
