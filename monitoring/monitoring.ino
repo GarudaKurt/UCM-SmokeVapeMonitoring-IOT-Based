@@ -14,22 +14,24 @@ const int interval = 1000;
 bool isAlarmActivate = false;
 const char *lastTime = "";
 const char *lastDate = "";
-int mq2Val = 0;
 int smokePPM = 0;
+int smokePPM1 = 0;
 
 const int sampleSize = 20;
-int calculatedThreshold = 0;  
+const int averagingSize = 15; 
+int calculatedThreshold = 0;
 int smokeSamples[sampleSize];
 int sampleIndex = 0;
+int sampleCount = 0;
 bool samplesCollected = false;
 
-//calculate the average smoke PPM from collected samples
+// We need to calculate the average smoke PPM from the collected 15 samples then get the average
 int calculateAverageSmoke() {
     int sum = 0;
-    for (int i = 0; i < sampleSize; i++) {
+    for (int i = 0; i < averagingSize; i++) {
         sum += smokeSamples[i];
     }
-    return sum / sampleSize;
+    return sum / averagingSize;
 }
 
 void setup() {
@@ -44,52 +46,55 @@ void loop() {
 
   if (currentMillis - prevMillis >= interval) {
 
-    mq2Val = readMQ2Sensor();
-    smokePPM = readSmoke();
+    smokePPM = readMQ2Sensor();
+    smokePPM1 = readSmoke();
 
-    smokeSamples[sampleIndex] = smokePPM;
-    sampleIndex++;
-
-    // If we have collected 20 samples, compute the threshold
-    if (sampleIndex >= sampleSize) {
-      sampleIndex = 0;
-      samplesCollected = true;
+    // Collect all samples in the array
+    if (sampleCount < sampleSize) {
+        smokeSamples[sampleCount] = smokePPM;
+        sampleCount++;
     }
 
-    if (samplesCollected) {
-      int avgSmoke = calculateAverageSmoke();
-      calculatedThreshold = avgSmoke + 300;  // Adaptive threshold
-      
-      Serial.print("Calculated Average Smoke: ");
-      Serial.println(avgSmoke);
-      Serial.print("Adaptive Threshold: ");
-      Serial.println(calculatedThreshold);
+    if (sampleCount >= sampleSize) {
+        for (int i = 0; i < averagingSize - 1; i++) {
+            smokeSamples[i] = smokeSamples[i + 1];
+        }
+        smokeSamples[averagingSize - 1] = smokePPM;
+
+        int avgSmoke = calculateAverageSmoke();
+        calculatedThreshold = avgSmoke + 100;  //We need to add on +100 for smoke are occuring in the area
+
+        Serial.print("Calculated Average Smoke: ");
+        Serial.println(avgSmoke);
+        Serial.print("Adaptive Threshold: ");
+        Serial.println(calculatedThreshold);
     }
 
+    // Check if the threshold is exceeded
     Serial.print("Threshold: ");
     Serial.println(calculatedThreshold);
 
-    if(samplesCollected && calculatedThreshold != 0 && smokePPM >= calculatedThreshold) {
-      Serial.print("MQ2 Value: ");
-      Serial.println(mq2Val);
-      Serial.print("Smoke PPM: ");
-      Serial.println(smokePPM);
-      alarmDisplay();
-      buzzerStart();
-      isAlarmActivate = true;
+    if (calculatedThreshold != 0 && smokePPM >= calculatedThreshold) {
+        Serial.print("MQ2 Value: ");
+        Serial.println(smokePPM);
+        Serial.print("Smoke PPM: ");
+        Serial.println(smokePPM1);
+        alarmDisplay();
+        buzzerStart();
+        isAlarmActivate = true;
     } else {
-      updateDisplay(smokePPM, mq2Val, lastTime, lastDate);
-      Serial.print("MQ2 Value: ");
-      Serial.println(mq2Val);
-      Serial.print("MQ135 Value: ");
-      Serial.println(smokePPM);
-      if(isAlarmActivate){
-        lastTime =  getTime();
-        lastDate =  getDate();
-        updateDisplay(smokePPM, mq2Val, getTime(), getDate());
-        isAlarmActivate = false;
-      }
-      buzzerStop();
+        updateDisplay(smokePPM1, smokePPM, lastTime, lastDate);
+        Serial.print("MQ2 Value: ");
+        Serial.println(mq2Val);
+        Serial.print("MQ135 Value: ");
+        Serial.println(smokePPM);
+        if (isAlarmActivate) {
+            lastTime = getTime();
+            lastDate = getDate();
+            updateDisplay(smokePPM1, smokePPM, getTime(), getDate());
+            isAlarmActivate = false;
+        }
+        buzzerStop();
     }
 
     prevMillis = currentMillis;
