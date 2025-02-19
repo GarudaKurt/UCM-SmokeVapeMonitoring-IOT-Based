@@ -57,9 +57,9 @@ void initFirebase() {
   Firebase.begin(&config, &auth);
   Firebase.setDoubleDigits(5);
 }
-
+unsigned long sendDataPrevMillis = 0;
 int readMQ2Sensor() {
-  if (Firebase.ready()) {
+  if (Firebase.ready() && (millis() - sendDataPrevMillis > 15000 || sendDataPrevMillis == 0)){
     if (Firebase.getString(fbdo, "/monitoring/mq2")) {
       return fbdo.stringData().toInt();
     }
@@ -68,7 +68,7 @@ int readMQ2Sensor() {
 }
 
 int readSmoke() {
-  if (Firebase.ready()) {
+ if (Firebase.ready() && (millis() - sendDataPrevMillis > 15000 || sendDataPrevMillis == 0)) {
     if (Firebase.getString(fbdo, "/monitoring/mq135")) {
       return fbdo.stringData().toInt();
     }
